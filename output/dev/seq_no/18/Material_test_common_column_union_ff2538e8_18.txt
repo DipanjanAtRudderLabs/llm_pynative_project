@@ -1,0 +1,2 @@
+Material - MATERIAL_TEST_COMMON_COLUMN_UNION_FF2538E8_18
+Inputs: ['inputs/track_1', 'inputs/track_2', 'inputs/track_3']

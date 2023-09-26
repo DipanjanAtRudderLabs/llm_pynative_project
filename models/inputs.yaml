@@ -1,0 +1,35 @@
+inputs:
+  - name: track_1
+    app_defaults:
+      table: RS360_SIMULATED_DATA.TRACKS_1
+      occurred_at_col: timestamp
+    contract:
+      is_optional: false
+      is_event_stream: true
+      with_entity_ids: []
+      with_columns:
+        - name: timestamp
+        - name: num
+  - name: track_2
+    app_defaults:
+      table: RS360_SIMULATED_DATA.TRACKS_2
+      occurred_at_col: timestamp
+    contract:
+      is_optional: false
+      is_event_stream: true
+      with_entity_ids: []
+      with_columns:
+        - name: timestamp
+        - name: num
+  - name: track_3
+    app_defaults:
+      table: RS360_SIMULATED_DATA.TRACKS_3
+      occurred_at_col: timestamp
+    contract:
+      is_optional: false
+      is_event_stream: true
+      with_entity_ids: []
+      with_columns:
+        - name: timestamp
+        - name: num
+      

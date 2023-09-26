@@ -1,0 +1,19 @@
+models:
+  - name: test_common_column_union
+    model_type: common_column_union
+    model_spec:
+      inputs:
+        - inputs/track_1
+        - inputs/track_2
+        - inputs/track_3
+  - name: rsCartCreateUnionCartUpdate
+    model_type: sql_template
+    model_spec:
+      validity_time: 24h # 1 day
+      materialization:
+        output_type: ephemeral
+        run_type: discrete
+      single_sql: "{% with Track1 = this.DeRef(\"inputs/track_1\") %}
+          select anonymous_id,timestamp from {{Track1}}
+      {% endwith %}
+      "

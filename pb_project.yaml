@@ -1,0 +1,12 @@
+name: sample_test
+schema_version: 44
+connection: snowflake_shopify_test_deb
+include_untimed: true
+model_folders:
+  - models
+entities:
+  - name: user
+
+python_requirements:
+  - profiles_rudderstack_pysql==0.2.0 #registers py_sql_model model type
+  - profiles_rudderstack_common_column_union==0.2.1 #registers common_column_union model type
