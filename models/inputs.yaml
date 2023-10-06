@@ -1,35 +1,58 @@
+# This is a sample file, for detailed reference see: https://rudderlabs.github.io/pywht/
 inputs:
-  - name: track_1
-    app_defaults:
-      table: RS360_SIMULATED_DATA.TRACKS_1
-      occurred_at_col: timestamp
+  - name: rsIdentifies
     contract:
       is_optional: false
       is_event_stream: true
-      with_entity_ids: []
+      with_entity_ids:
+        - user
       with_columns:
         - name: timestamp
-        - name: num
-  - name: track_2
+        - name: user_id
+        - name: anonymous_id
+        - name: email
     app_defaults:
-      table: RS360_SIMULATED_DATA.TRACKS_2
+      table: rs_profiles.demo_rs_identifies
       occurred_at_col: timestamp
+  - name: rsTracks
     contract:
       is_optional: false
       is_event_stream: true
-      with_entity_ids: []
+      with_entity_ids:
+        - user
       with_columns:
         - name: timestamp
+        - name: user_id
+        - name: anonymous_id
         - name: num
-  - name: track_3
     app_defaults:
-      table: RS360_SIMULATED_DATA.TRACKS_3
+      view: rs_profiles.view_may22_demo_rs_tracks
       occurred_at_col: timestamp
+  - name: rsTracks_1
     contract:
       is_optional: false
       is_event_stream: true
-      with_entity_ids: []
+      with_entity_ids:
+        - user
       with_columns:
         - name: timestamp
+        - name: user_id
+        - name: anonymous_id
         - name: num
-      
+    app_defaults:
+      view: rs_profiles.view_may22_demo_rs_tracks_1
+      occurred_at_col: timestamp
+  - name: rsTracks_2
+    contract:
+      is_optional: false
+      is_event_stream: true
+      with_entity_ids:
+        - user
+      with_columns:
+        - name: timestamp
+        - name: user_id
+        - name: anonymous_id
+        - name: num
+    app_defaults:
+      view: rs_profiles.view_may22_demo_rs_tracks_2
+      occurred_at_col: timestamp

@@ -8,7 +8,6 @@ setup(
     description='A py_native model package that implements the common_column_union model',
     packages=['profiles_rudderstack_common_column_union_new'],
     install_requires=[
-        'snowflake-snowpark-python',
         'pandas'
     ],
 )

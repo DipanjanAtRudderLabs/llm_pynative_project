@@ -41,21 +41,20 @@ class CommonColumnUnionRecipe(PyNativeRecipe):
 
     def prepare(self, this: WhtMaterial):
         for in_model in self.inputs:
-            contract = build_contract('{ "is_event_stream": true, "with_columns":[{"name":"num"}] }')
-            this.de_ref(in_model, contract)
+            # contract = build_contract('{ "is_event_stream": true, "with_columns":[{"name":"num"}] }')
+            this.de_ref_optional(in_model)
 
     def execute(self, this: WhtMaterial):
         self.logger.info("Executing CommonColumnUnionRecipe")
-        tables = []
         common_columns_count = {}
         for in_model in self.inputs:
-            input_material = this.de_ref(in_model)
-            tables.append(input_material.name())
-            query = "show columns in table " + input_material.name()
-            self.logger.info(f"Executing query: {query}")
-            columns = input_material.get_table_data().columns
-            columns = columns.map(lambda x: {"name": x, "type": "string"})
-            # columns = input_material.get_columns()
+            self.logger.info(f"Processing input {in_model}")
+            input_material = this.de_ref_optional(in_model)
+            self.logger.info(f"Input material: {input_material}")
+            if input_material is None:
+                continue
+            columns = input_material.get_columns()
+            self.logger.info(f"Columns: {columns}")
             for col in columns:
                 key = (col["name"], col["type"])
                 if key in common_columns_count:
@@ -63,20 +62,33 @@ class CommonColumnUnionRecipe(PyNativeRecipe):
                 else:
                     common_columns_count[key] = 1
         
-        common_columns = [name for (name, _), count in common_columns_count.items() if count == len(self.inputs)]
-
+        common_columns = [name for (name, _), count in common_columns_count.items() if count == len(list(filter(lambda x: this.de_ref_optional(x) is not None, self.inputs)))]
+        self.logger.info(f"Common columns: {common_columns}")
         if len(common_columns) > 0:
-            select_columns = ', '.join([f'{column}' for column in common_columns])
+            select_columns = ', '.join([f'timestamp::timestamp' if column == "timestamp" else f'{column}' for column in common_columns])
             union_queries = []
-            for table in tables:
-                union_queries.append(f"SELECT {select_columns} FROM {table}")
-            
+            for in_model in self.inputs:
+               if this.de_ref_optional(in_model) is None:
+                   continue
+               union_queries.append(
+                f"""{{% with input_mat = this.DeRefOptional('{in_model}') %}}
+                        select {select_columns} from {{{{input_mat}}}}
+                    {{% endwith %}}"""
+                )
+               
             union_sql = " UNION ALL ".join(union_queries)
 
             this.wht_ctx.client.query_template_without_result(
-                "{% macro selector_sql() %}" + 
-                union_sql + 
-                "{% endmacro %}" + 
-                """{% exec %}{{ warehouse.CreateReplaceTableAs(this.Name(), selector_sql()) }}{% endexec %}"""
+                f"""
+                {{% macro begin_block() %}}
+                    {{% exec %}} {{{{EphemeralInputsSetup(this)}}}} {{% endexec %}}
+                    {{% macro selector_sql() %}}
+                        {union_sql}
+                    {{% endmacro %}}
+                    {{% exec %}} {{{{warehouse.CreateReplaceTableAs(this.Name(), selector_sql())}}}} {{% endexec %}}
+                    {{% exec %}} {{{{EphemeralInputsCleanup(this)}}}} {{% endexec %}}
+                {{% endmacro %}}
+                
+                {{% exec %}} {{{{warehouse.BeginEndBlock(begin_block())}}}} {{% endexec %}}"""
             )
         

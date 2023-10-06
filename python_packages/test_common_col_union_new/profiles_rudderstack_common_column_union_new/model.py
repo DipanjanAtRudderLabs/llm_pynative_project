@@ -4,7 +4,6 @@ from profiles_rudderstack.recipe import PyNativeRecipe
 from profiles_rudderstack.material import WhtMaterial
 from profiles_rudderstack.logger import Logger
 from typing import List
-from snowflake.snowpark.session import Table
 import pandas as pd
 
 
@@ -64,6 +63,11 @@ class NewCommonColumnUnionRecipe(PyNativeRecipe):
             input_material = this.de_ref(in_model)
             df = input_material.get_table_data()
             tables.append(df)
+
+            # read data in batches, only supported in case of snowflake currently
+            # dfIter = input_material.get_table_data_batches()
+            # for batch in dfIter:
+            #     self.logger.info("Batch: {0}".format(batch))
 
             # Get model's entity, entity will be none if no entity_key is provided
             # entity = input_material.entity()
