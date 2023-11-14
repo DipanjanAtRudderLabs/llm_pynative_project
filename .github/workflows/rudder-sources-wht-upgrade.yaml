@@ -17,7 +17,7 @@ jobs:
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "noreply@github.com"
-          git config --global url."git@github.com/rudderlabs".insteadOf "https://github.com/rudderlabs"
+          git config --global url."git@github.com:rudderlabs".insteadOf "https://github.com/rudderlabs"
       
       - name: Setup Go
         uses: actions/setup-go@v4
