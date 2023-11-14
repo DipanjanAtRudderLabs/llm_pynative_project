@@ -10,7 +10,8 @@ jobs:
   create-upgrade-pr:
     name: bump wht version and create a pull request
     runs-on: ubuntu-latest
-
+    outputs:
+      prlink: ${{ steps.package_update.outputs.prlink }}
 
     steps:
       - name: Initialise Git Config
@@ -30,6 +31,7 @@ jobs:
           ssh-private-key: ${{ secrets.APP_RUDDER_SOURCES_SSH_KEY }}
       
       - name: Perform package update
+        id: package_update
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
           GOPRIVATE: github.com/rudderlabs/wht
@@ -47,5 +49,56 @@ jobs:
           git commit -am "chore: wht upgrade to version $GITHUB_REF_NAME"
           git push -u origin chore/whtupgrade$GITHUB_REF_NAME
 
-          gh pr create --fill
+          echo "prlink=$(gh pr create --fill)" >> $GITHUB_OUTPUT
   
+  notify-in-slack:
+    name: notify in slack
+    runs-on: ubuntu-latest
+
+    jobs:
+      notify-in-slack:
+        name: notify in slack
+        runs-on: ubuntu-latest
+        needs: create-upgrade-pr
+
+        steps:
+          - name: Notify in Slack
+            uses: slackapi/slack-github-action@v1.23.0
+            env:
+              SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+              RELEASES_URL: 'https://github.com/rudderlabs/rudder-transformer/releases/tag/'
+            with:
+              channel-id: ${{ secrets.PROFILES_DEV_CHANNEL_ID }}
+              payload: |
+                {
+                  "blocks": [
+                    {
+                      "type": "header",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "PR for WHT version upgrade $GITHUB_REF_NAME is created in Rudder Sources"
+                      }
+                    },
+                    {
+                      "type": "divider"
+                    },
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": "PR Link: ${{ needs.create-upgrade-pr.outputs.prlink }}"
+                      }
+                    },
+                    {
+                      "type": "divider"
+                    },
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": "CC: <@S05HPS697J4>"
+                      }
+                    },
+                  ]
+                }
+
