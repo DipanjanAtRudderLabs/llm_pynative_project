@@ -35,7 +35,7 @@ jobs:
           GOPRIVATE: github.com/rudderlabs/wht
         run: |
          
-          git clone https://${{secrets.PAT}}github.com/rudderlabs/rudder-sources.git
+          git clone https://${{secrets.PAT}}@github.com/rudderlabs/rudder-sources.git
           cd rudder-sources
           git checkout -b chore/whtupgrade$GITHUB_REF_NAME
 
