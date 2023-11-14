@@ -27,7 +27,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
-          git config --global --add url."git@gitlab.com:".insteadOf "https://gitlab.com/"
+          git config --global url."git@github.com:rudderlabs".insteadOf "https://github.com/rudderlabs"
           git clone https://${{secrets.PAT}}@github.com/rudderlabs/rudder-sources.git
           cd rudder-sources
           git checkout -b chore/whtupgrade$GITHUB_REF_NAME
