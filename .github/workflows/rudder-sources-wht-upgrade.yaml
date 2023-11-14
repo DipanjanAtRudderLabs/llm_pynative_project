@@ -93,7 +93,6 @@ jobs:
                     "type": "mrkdwn",
                     "text": "CC: <@S05HPS697J4>"
                   }
-                },
+                }
               ]
             }
-
