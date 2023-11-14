@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       prlink: ${{ steps.package_update.outputs.prlink }}
+      version: ${{ steps.package_update.outputs.version }}
 
     steps:
       - name: Initialise Git Config
@@ -50,6 +51,7 @@ jobs:
           git push -u origin chore/whtupgrade$GITHUB_REF_NAME
 
           echo "prlink=$(gh pr create --fill)" >> $GITHUB_OUTPUT
+          echo "version=$GITHUB_REF_NAME" >> $GITHUB_OUTPUT
   
   notify-in-slack:
     name: notify in slack
@@ -71,7 +73,7 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "PR for WHT version upgrade $GITHUB_REF_NAME is created in Rudder Sources"
+                    "text": "PR for WHT version upgrade ${{ needs.create-upgrade-pr.outputs.version }} is created in Rudder Sources"
                   }
                 },
                 {
@@ -91,7 +93,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "CC: <@S05HPS697J4>"
+                    "text": "CC: <@U02SFT7NJD8>"
                   }
                 }
               ]
