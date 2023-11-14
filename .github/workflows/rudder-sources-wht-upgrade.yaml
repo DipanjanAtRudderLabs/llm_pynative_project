@@ -44,7 +44,7 @@ jobs:
           go mod vendor
           go mod tidy
 
-          git commit -m "chore: wht upgrade to version $GITHUB_REF_NAME"
+          git commit -am "chore: wht upgrade to version $GITHUB_REF_NAME"
           git push -u origin chore/whtupgrade$GITHUB_REF_NAME
 
           gh pr create --fill
