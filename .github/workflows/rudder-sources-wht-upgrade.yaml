@@ -17,6 +17,9 @@ jobs:
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "noreply@github.com"
+          git config --global url."https://${{secrets.PAT}}:x-oauth-basic@github.com/rudderlabs".insteadOf "https://github.com/rudderlabs"
+          git config --global credential.helper store
+          echo "machine github.com login ${{ secrets.GITHUB_TOKEN }}" > ~/.netrc
       
       - name: Setup Go
         uses: actions/setup-go@v4
@@ -32,11 +35,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
-          git config --global url."https://${{secrets.PAT}}:x-oauth-basic@github.com/rudderlabs".insteadOf "https://github.com/rudderlabs"
+         
           git clone https://github.com/rudderlabs/rudder-sources.git
           cd rudder-sources
           git checkout -b chore/whtupgrade$GITHUB_REF_NAME
 
+          go get github.com/rudderlabs/wht@$GITHUB_REF_NAME
 
           go mod vendor
           go mod tidy
