@@ -3,7 +3,7 @@ name: Raise a PR for package update in rudder sources
 on:
   push:
     tags:
-      - 'v[0-9]+(\.[0-9]+)*([-\.]\S+)?'
+      - 'v[0-9]+.[0-9]+.[0-9]+'
 
 
 jobs:
