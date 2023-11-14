@@ -22,22 +22,21 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: '1.21'
-
-      # - name: Set private key
-      #   uses: webfactory/ssh-agent@v0.7.0
-      #   with:
-      #     ssh-private-key: ${{ secrets.APP_RUDDER_SOURCES_SSH_KEY }}
       
       - name: Perform package update
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
+          git config --global credential.helper store
           git config --global url."https://${{secrets.PAT}}:x-oauth-basic@github.com/rudderlabs".insteadOf "https://github.com/rudderlabs"
-          git clone https://${{secrets.PAT}}@github.com/rudderlabs/rudder-sources.git
+          git config --global credential.helper store
+          git clone https://github.com/rudderlabs/rudder-sources.git
+          echo "machine github.com login ${{ secrets.PAT }}" > ~/.netrc
+
           cd rudder-sources
           git checkout -b chore/whtupgrade$GITHUB_REF_NAME
 
-          go get ${{secrets.PAT}}@github.com/rudderlabs/wht@$GITHUB_REF_NAME
+          go get github.com/rudderlabs/wht@$GITHUB_REF_NAME
 
           go mod vendor
           go mod tidy
