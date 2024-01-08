@@ -1,2 +1,0 @@
-Material - MATERIAL_TEST_COMMON_COLUMN_UNION_E576E823_28
-Inputs: ['inputs/track_1', 'inputs/track_2', 'inputs/track_3']

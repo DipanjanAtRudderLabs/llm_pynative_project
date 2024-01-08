@@ -1,13 +1,16 @@
-name: sample_test
-schema_version: 44
-connection: testdebanjan
+name: llm_pynative_project
+# Project's yaml schema version
+schema_version: 49
+# WH Connection to use.
+connection: profiles-ml-connection
+# Whether to allow inputs having no timestamps,
+# if true, data without timestamps are included when running models
 include_untimed: true
+# Model folders to use.
 model_folders:
   - models
 entities:
   - name: user
 
-
 python_requirements:
-  - profiles_rudderstack_pysql==0.2.0 #registers py_sql_model model type
-  - profiles_rudderstack_common_column_union==0.2.0 #registers common_column_union model type
+  - rudderstack_predictions_llm_core==0.0.1

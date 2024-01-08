@@ -1,58 +1,13 @@
 # This is a sample file, for detailed reference see: https://rudderlabs.github.io/pywht/
 inputs:
-  - name: rsIdentifies
+  - name: rsMainIdStitchedFeatures
     contract:
       is_optional: false
       is_event_stream: true
       with_entity_ids:
         - user
       with_columns:
-        - name: timestamp
-        - name: user_id
-        - name: anonymous_id
-        - name: email
+        - name: user_main_id
+        - name: first_name
     app_defaults:
-      table: rs_profiles.demo_rs_identifies
-      occurred_at_col: timestamp
-  - name: rsTracks
-    contract:
-      is_optional: false
-      is_event_stream: true
-      with_entity_ids:
-        - user
-      with_columns:
-        - name: timestamp
-        - name: user_id
-        - name: anonymous_id
-        - name: num
-    app_defaults:
-      view: rs_profiles.view_may22_demo_rs_tracks
-      occurred_at_col: timestamp
-  - name: rsTracks_1
-    contract:
-      is_optional: false
-      is_event_stream: true
-      with_entity_ids:
-        - user
-      with_columns:
-        - name: timestamp
-        - name: user_id
-        - name: anonymous_id
-        - name: num
-    app_defaults:
-      view: rs_profiles.view_may22_demo_rs_tracks_1
-      occurred_at_col: timestamp
-  - name: rsTracks_2
-    contract:
-      is_optional: false
-      is_event_stream: true
-      with_entity_ids:
-        - user
-      with_columns:
-        - name: timestamp
-        - name: user_id
-        - name: anonymous_id
-        - name: num
-    app_defaults:
-      view: rs_profiles.view_may22_demo_rs_tracks_2
-      occurred_at_col: timestamp
+      table: data_apps_simulated_shopify.shopify_user_features

@@ -1,19 +1,11 @@
 models:
-  - name: test_common_column_union
-    model_type: common_column_union
+  - name: llm_prompt_response_first_name
+    model_type: llm_prompt_response
     model_spec:
       inputs:
-        - inputs/rsTracks_1
-        - inputs/rsTracks_2
-        - inputs/rsTracks
-  # - name: rsCartCreateUnionCartUpdate
-  #   model_type: sql_template
-  #   model_spec:
-  #     validity_time: 24h # 1 day
-  #     materialization:
-  #       output_type: ephemeral
-  #       run_type: discrete
-  #     single_sql: "{% with Track1 = this.DeRef(\"inputs/track_1\") %}
-  #         select anonymous_id,timestamp from {{Track1}}
-  #     {% endwith %}
-  #     "
+        - inputs/rsMainIdStitchedFeatures
+      target_field: FIRST_NAME
+      output_field: first_name
+      prompt: "You are provided with a comma-sepatated list of first name values for a user. Suggest the most likely first name. Return only the first name and no other text"
+      endpoint: openai
+      model: gpt-4-1106-preview	
